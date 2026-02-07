@@ -1,25 +1,28 @@
 package com.example.ProductManagement.service.impl;
 
-
 import com.example.ProductManagement.dto.ProductDTO;
 import com.example.ProductManagement.model.Product;
 import com.example.ProductManagement.repository.ProductRepository;
 import com.example.ProductManagement.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public  class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
     @Override
     public ProductDTO addProduct(ProductDTO productDTO) {
-        Product product = Product.builder().productName(productDTO.getProductName()).price(productDTO.getPrice()).category(productDTO.getCategory()).quantity(productDTO.getQuantity()).build();
+        Product product = Product.builder()
+                .productName(productDTO.getProductName())
+                .category(productDTO.getCategory())
+                .price(productDTO.getPrice())
+                .quantity(productDTO.getQuantity())
+                .build();
         Product savedProduct = productRepository.save(product);
         productDTO.setId(savedProduct.getId());
         return productDTO;
@@ -27,13 +30,16 @@ public  class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getAllProducts() {
-
-        return productRepository.findAll().stream().map(p -> ProductDTO.builder().id(p.getId()).productName(p.getProductName()).price(p.getPrice()).quantity(p.getQuantity()).category(p.getCategory()).build()).collect(Collectors.toList());
+        return productRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ProductDTO> searchProducts(String category) {
-        return productRepository.findByCategoryIgnoreCase(category).stream().map(p -> ProductDTO.builder().id(p.getId()).productName(p.getProductName()).category(p.getCategory()).price(p.getPrice()).quantity(p.getQuantity()).build()).collect(Collectors.toList());
+        return productRepository.findByCategoryIgnoreCase(category).stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -46,5 +52,13 @@ public  class ProductServiceImpl implements ProductService {
                 .orElse("Product '" + name + "' not found.");
     }
 
-
+    private ProductDTO mapToDTO(Product product) {
+        return ProductDTO.builder()
+                .id(product.getId())
+                .productName(product.getProductName())
+                .category(product.getCategory())
+                .price(product.getPrice())
+                .quantity(product.getQuantity())
+                .build();
+    }
 }

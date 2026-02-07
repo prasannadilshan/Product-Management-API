@@ -2,6 +2,7 @@ package com.example.ProductManagement.controller;
 
 import com.example.ProductManagement.dto.ProductDTO;
 import com.example.ProductManagement.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ProductDTO addProduct(@RequestBody ProductDTO productDTO) {
+    public ProductDTO addProduct(@Valid @RequestBody ProductDTO productDTO) {
         return productService.addProduct(productDTO);
     }
 

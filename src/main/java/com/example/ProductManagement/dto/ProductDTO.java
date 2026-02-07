@@ -12,18 +12,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProductDTO {
-    private long id;
 
-    @NotBlank(message = "product name cannot be blank")
+    private String id; // ✅ MongoDB uses String IDs (ObjectId as String)
+
+    @NotBlank(message = "Product name cannot be blank")
     private String productName;
 
     @NotBlank(message = "Category cannot be blank")
     private String category;
 
-    @Min(value = 1,message = "Price must be greater than 0")
+    @Min(value = 1, message = "Price must be greater than 0")
     private double price;
 
-    @Min(value = 1,message = "quantity must be greater than 0")
+    @Min(value = 1, message = "Quantity must be greater than 0")
     private int quantity;
-
 }
